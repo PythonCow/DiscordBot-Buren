@@ -18,7 +18,3 @@ exports.getBitcoinPrice = function (callback) {
         }
     });
 }
-
-exports.getBitcoinPrice(function (price) {
-    console.log(price);
-});
