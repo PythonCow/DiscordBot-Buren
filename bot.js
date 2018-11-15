@@ -3,6 +3,7 @@ var logger = require('winston');
 var auth = require('./auth.json');
 var getMeme = require('./getMeme.js');
 var bitcoin = require('./getBitcoinPrice.js');
+var fs = require('fs');
 var quote = ['All the lessons of history and experience must be lost upon us if we are content to trust alone to the peculiar advantages we happen to possess. - Buren',
     'Don\'t cry because it\'s over, smile because it happened. - Dr. Sesuss',
     'Be yourself; everyone else is already taken. - Oscar Wilde',
@@ -284,6 +285,14 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     to: channelID,
                     message: 'Okay I\'ll leave you alone for a bit.'
                 });
+                break;
+            // !facepalm
+            case 'facepalm':
+                bot.uploadFile({
+                    to: channelID,
+                    file: './images/Facepalm.gif'
+                });
+                break;
             // !conqueror - spams rah
             case 'conqueror':
                 if (conqueror == true) {
@@ -302,18 +311,18 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 break;
             //!music - plays a tune FIXME
             case 'music':
-            client.joinVoiceChannel(voiceChannelID, function(error, events) {
+            bot.joinVoiceChannel('512429784937136152', function(error, events) {
                 //Check to see if any errors happen while joining.
                 if (error) return console.error(error);
               
                 //Then get the audio context
-                client.getAudioContext(voiceChannelID, function(error, stream) {
+                bot.getAudioContext('512429784937136152', function(error, stream) {
                   //Once again, check to see if any errors exist
                   if (error) return console.error(error);
               
                   //Create a stream to your file and pipe it to the stream
                   //Without {end: false}, it would close up the stream, so make sure to include that.
-                  fs.createReadStream('myFile.mp3').pipe(stream, {end: false});
+                  fs.createReadStream('./sounds/mp3/165. Song 01.mp3').pipe(stream, {end: false});
               
                   //The stream fires `done` when it's got nothing else to send to Discord.
                   stream.on('done', function() {
