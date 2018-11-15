@@ -1,0 +1,11 @@
+{
+  "name": "dnd-bot",
+  "version": "1.0.0",
+  "description": "To roll d20 and other stuff",
+  "main": "bot.js",
+  "author": "MasterofOld",
+  "dependencies": {
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "winston": "^3.1.0"
+  }
+}
