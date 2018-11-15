@@ -341,7 +341,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
               
                   //Create a stream to your file and pipe it to the stream
                   //Without {end: false}, it would close up the stream, so make sure to include that.
-                  fs.createReadStream('./sounds/' + sounds[rnd]).pipe(stream, {end: false});
+                  fs.createReadStream('./Sounds/' + sounds[rnd]).pipe(stream, {end: false});
                   bot.sendMessage({
                       to: channelID,
                       message: 'Now jamming out to ' + sounds[rnd]
