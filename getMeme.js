@@ -3,12 +3,10 @@ exports.memeSources = [
     'lotrmemes',
     'prequelmemes',
     'raimimemes',
-    'wholesomememes',
     'HistoryMemes',
-    'dankchristianmemes'
 ];
 
-function getRandomSubJson(memeSoures, callback) {
+function getRandomSubJson(memeSources, callback) {
     var memeSource = memeSources[Math.floor(Math.random() * memeSources.length)];
     var topPostsJsonUrl = "https://reddit.com/r/" + memeSource + "/top/.json";
     var userAgentRequest = request.defaults({
