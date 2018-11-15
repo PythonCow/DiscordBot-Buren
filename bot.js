@@ -301,16 +301,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 break;
             //!music - plays a tune FIXME
             case 'music':
-                    // Only try to join the sender's voice channel if they are in one themselves
-                    // if (user.voiceChannel) {
-                    // voiceChannel.join()
-                    //     .then(connection => { // Connection is an instance of VoiceConnection
-                    //     message.reply('I have successfully connected to the channel!');
-                    //     })
-                    //     .catch(console.log);
-                    // } else {
-                    // message.reply('You need to join a voice channel first!');
-                    // }
+                bot.joinVoiceChannel('General')
                 break;
             default: 
             bot.sendMessage({
