@@ -18,7 +18,7 @@ var quote = ['All the lessons of history and experience must be lost upon us if 
     'No, I am your father! - Vader',
     'The problem with quotes on the Internet is that it is hard to verify their authenticity. - Abraham Lincoln',
     'it\'s a trap! - Admiral Ackbar',
-]
+];
 
 var emote = [':no_mouth:',
     ':slight_frown:',
@@ -46,7 +46,7 @@ var emote = [':no_mouth:',
     ':angry:',
     ':rage:',
     ':scream:',
-]
+];
 
 var weapon = ['a sword',
     'a piece of bacon',
@@ -58,12 +58,23 @@ var weapon = ['a sword',
     'this thumb',
     'fire',
     'my good looks',
-]
+];
+
+var sounds = fs.readdirSync('./sounds');
+// var sounds = ['002-star_wars_battlefront_2_-_original_game_audio.mp3',
+// '01 - Voden An (Brothers All).mp3',
+// '01 Darkest Dungeon (Theme).mp3',
+// '01. Main Theme.mp3',
+// '01. Track 01.mp3',
+// '01. We Will Not Be Forgotten.mp3',
+// ];
+
 
 var target = ' ';
 var rndemote = 1;
 var start = true;
 var conqueror = false;
+var voiceChannelID = auth.voiceId;
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -309,27 +320,62 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     conqueror = true;
                 }
                 break;
-            //!music - plays a tune FIXME
+            //!music
             case 'music':
-            bot.joinVoiceChannel('512429784937136152', function(error, events) {
+            rnd = Math.floor(Math.random() * sounds.length)
+            if (sounds[rnd] == null) {
+                bot.sendMessage({
+                    to: channelID,
+                    message: 'I am sorry, something went wrong. Try again.'
+                });
+                break;
+            }
+            bot.joinVoiceChannel(voiceChannelID, function(error, events) {
                 //Check to see if any errors happen while joining.
                 if (error) return console.error(error);
               
                 //Then get the audio context
-                bot.getAudioContext('512429784937136152', function(error, stream) {
+                bot.getAudioContext(voiceChannelID, function(error, stream) {
                   //Once again, check to see if any errors exist
                   if (error) return console.error(error);
               
                   //Create a stream to your file and pipe it to the stream
                   //Without {end: false}, it would close up the stream, so make sure to include that.
-                  fs.createReadStream('./sounds/mp3/165. Song 01.mp3').pipe(stream, {end: false});
+                  fs.createReadStream('./sounds/' + sounds[rnd]).pipe(stream, {end: false});
+                  bot.sendMessage({
+                      to: channelID,
+                      message: 'Now jamming out to ' + sounds[rnd]
+                  });
               
                   //The stream fires `done` when it's got nothing else to send to Discord.
                   stream.on('done', function() {
-                     //Handle
+                    bot.leaveVoiceChannel(voiceChannelID, {});
+                    bot.sendMessage({
+                        to: channelID,
+                        message: 'The song has ended.'
+                    });
                   });
                 });
               });
+                break;
+                //!stop - will stop the music FIXME
+            case 'stop':
+                // bot.leaveVoiceChannel(voiceChannelID, {});
+                break;
+                //!vote
+            case 'vote':
+                rnd = Math.ceil(Math.random() * 2)
+                if (rnd == 1) {
+                    bot.sendMessage({
+                        to: channelID,
+                        message: 'I vote for.'
+                    });
+                } else {
+                    bot.sendMessage({
+                        to: channelID,
+                        message: 'I vote against.'
+                    });
+                }
                 break;
             case 'bitcoin':
                 bitcoin.getBitcoinPrice(function (price) {
