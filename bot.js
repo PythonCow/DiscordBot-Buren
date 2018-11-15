@@ -1,6 +1,7 @@
 ﻿var Discord = require('discord.io');
 var logger = require('winston');
 var auth = require('./auth.json');
+var getMeme = require('./getMeme.js');
 var quote = ['All the lessons of history and experience must be lost upon us if we are content to trust alone to the peculiar advantages we happen to possess. - Buren',
 'Don\'t cry because it\'s over, smile because it happened. - Dr. Sesuss',
 'Be yourself; everyone else is already taken. - Oscar Wilde',
@@ -184,10 +185,12 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             	break;
             // !meme
             case 'meme':
-                bot.sendMessage({
-                    to: channelID,
-                    message: 'What\'s a meme?'
-                });
+                getMeme.getRandomImageUrl(getMeme.memeSources, function (url) {
+                    bot.sendMessage({
+                        to: channelID,
+                        message: url
+                    });
+                });  
                 break;
             // !whale-snark
             case 'whale-snark':
