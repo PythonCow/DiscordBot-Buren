@@ -4,7 +4,7 @@ var auth = require('./auth.json');
 var getMeme = require('./getMeme.js');
 var bitcoin = require('./getBitcoinPrice.js');
 var fs = require('fs');
-var quote = ['All the lessons of history and experience must be lost upon us if we are content to trust alone to the peculiar advantages we happen to possess. - Buren',
+var quote = ['All the lessons of history and experience must be lost upon us if we are content to trust alone to the peculiar advantages we happen to possess. - ' + auth.name,
     'Don\'t cry because it\'s over, smile because it happened. - Dr. Sesuss',
     'Be yourself; everyone else is already taken. - Oscar Wilde',
     'Oof - Robloxs',
@@ -54,13 +54,13 @@ var weapon = ['a sword',
     'a wrench',
     'my eyeballs',
     'pocket lint',
-    'the bot named Buren',
+    'the bot named ' + auth.name,
     'this thumb',
     'fire',
     'my good looks',
 ];
 
-var sounds = fs.readdirSync('./sounds');
+var sounds = fs.readdirSync('./Sounds');
 // var sounds = ['002-star_wars_battlefront_2_-_original_game_audio.mp3',
 // '01 - Voden An (Brothers All).mp3',
 // '01 Darkest Dungeon (Theme).mp3',
@@ -103,7 +103,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         });
         start = false;
     }
-    else if (message.substring(0, 1) == '!') {
+    else if (message.substring(0, 1) == auth.commandPrefix) {
         var args = message.substring(1).split(' ');
         var cmd = args[0];
         var rnd = 0;
@@ -216,7 +216,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             case 'hello':
                 bot.sendMessage({
                     to: channelID,
-                    message: 'Hello, I am Buren. Type \'!command\' to talk to me such as \'!d20\' and \'!quote\''
+                    message: 'Hello, I am '+ auth.name +'. Type \'!command\' to talk to me such as \'!d20\' and \'!quote\''
                 });
                 break;
             // !command
@@ -268,7 +268,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             case 'kill':
                 rnd = Math.floor(Math.random() * weapon.length);
                 if (target != ' ') {
-                    if (target.toLowerCase() == 'me' || target.toLowerCase() == 'buren' || target.toLowerCase() == 'myself') {
+                    if (target.toLowerCase() == 'me' || target.toLowerCase() == auth.name.toLowerCase() || target.toLowerCase() == 'myself') {
 
                         bot.sendMessage({
                             to: channelID,
@@ -392,7 +392,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
         }
     }
-    else if (message.toLowerCase().indexOf('buren') >= 0) {
+    else if (message.toLowerCase().indexOf(auth.name.toLowerCase()) >= 0) {
         if (message.toLowerCase().indexOf('offline') >= 0) {
             bot.sendMessage({
                 to: channelID,
