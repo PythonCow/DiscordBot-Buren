@@ -30,6 +30,6 @@ exports.getRandomImageUrl = function (memeSources, callback) {
     getRandomSubJson(memeSources, function (randomSubData) {
         var memeList = randomSubData.data.children;
         var memeData = memeList[Math.floor(Math.random() * memeList.length)];
-        callback(memeData.data.url);
+        callback(memeData.data.url, memeData.data.title);
     });
 }

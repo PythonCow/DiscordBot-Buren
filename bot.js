@@ -198,7 +198,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 break;
             // !meme
             case 'meme':
-                getMeme.getRandomImageUrl(getMeme.memeSources, function (url) {
+                getMeme.getRandomImageUrl(getMeme.memeSources, function (url, title) {
+                    bot.sendMessage({
+                        to: channelID,
+                        message: title
+                    });
                     bot.sendMessage({
                         to: channelID,
                         message: url
