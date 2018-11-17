@@ -99,7 +99,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     if (start == true) {
         bot.sendMessage({
             to: channelID,
-            message: 'Hello my friends, I am online now.'
+            message: 'Hello my friends, I am online now. Type \'' + auth.commandPrefix + '\' followed by a key word to get started.'
         });
         start = false;
     }
@@ -220,14 +220,14 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             case 'hello':
                 bot.sendMessage({
                     to: channelID,
-                    message: 'Hello, I am '+ auth.name +'. Type \'!command\' to talk to me such as \'!d20\' and \'!quote\''
+                    message: 'Hello, I am '+ auth.name +'. Type \'' + auth.commandPrefix + '\' followed by a key word such as d20 or meme to all me to active my one of my functions. Type \'' + auth.commandPrefix + 'help\' all my current commands'
                 });
                 break;
             // !command
-            case 'command':
+            case 'help':
                 bot.sendMessage({
                     to: channelID,
-                    message: 'Command? Oh okay here are the list of my most important commands: !d20, !meme, !quote, !rate and !ping. See https://docs.google.com/document/d/1j2Y4_F3APUHNWc8SfjuaOaZEFkLHIvWVQ7stay-fOm4/edit?usp=sharing for more commands.'
+                    message: 'Here are all my commands: https://docs.google.com/document/d/1j2Y4_F3APUHNWc8SfjuaOaZEFkLHIvWVQ7stay-fOm4/edit?usp=sharing.'
                 });
                 break;
             // !thanks
