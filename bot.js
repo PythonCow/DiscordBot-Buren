@@ -60,15 +60,8 @@ var weapon = ['a sword',
     'my good looks',
 ];
 
-var sounds = fs.readdirSync('./Sounds');
-// var sounds = ['002-star_wars_battlefront_2_-_original_game_audio.mp3',
-// '01 - Voden An (Brothers All).mp3',
-// '01 Darkest Dungeon (Theme).mp3',
-// '01. Main Theme.mp3',
-// '01. Track 01.mp3',
-// '01. We Will Not Be Forgotten.mp3',
-// ];
-
+var soundFiles = fs.readdirSync('./Sounds');
+var sounds = getSounds();
 
 var target = ' ';
 var rndemote = 1;
@@ -324,44 +317,25 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     conqueror = true;
                 }
                 break;
-            //!music
-            case 'music':
+            //!play
+            case 'play':
             rnd = Math.floor(Math.random() * sounds.length)
-            if (sounds[rnd] == null) {
-                bot.sendMessage({
-                    to: channelID,
-                    message: 'I am sorry, something went wrong. Try again.'
-                });
-                break;
-            }
-            bot.joinVoiceChannel(voiceChannelID, function(error, events) {
-                //Check to see if any errors happen while joining.
-                if (error) return console.error(error);
-              
-                //Then get the audio context
-                bot.getAudioContext(voiceChannelID, function(error, stream) {
-                  //Once again, check to see if any errors exist
-                  if (error) return console.error(error);
-              
-                  //Create a stream to your file and pipe it to the stream
-                  //Without {end: false}, it would close up the stream, so make sure to include that.
-                  fs.createReadStream('./Sounds/' + sounds[rnd]).pipe(stream, {end: false});
-                  bot.sendMessage({
-                      to: channelID,
-                      message: 'Now jamming out to ' + sounds[rnd]
-                  });
-              
-                  //The stream fires `done` when it's got nothing else to send to Discord.
-                  stream.on('done', function() {
-                    bot.leaveVoiceChannel(voiceChannelID, {});
+            if (args[0] == 'album') {
+                playMusic(args[0], args.splice(1).join(' '), channelID);
+            } else if (args[0] == 'song') {
+                playMusic(args[0], args.splice(1).join(' '), channelID);
+            } else {
+                if (sounds[rnd] == null) {
                     bot.sendMessage({
                         to: channelID,
-                        message: 'The song has ended.'
+                        message: 'I am sorry, something went wrong. Try again.'
                     });
-                  });
-                });
-              });
-                break;
+                    break;
+                }
+                playMusic('song', sounds[rnd], channelID);
+            }
+            break;
+
                 //!stop - will stop the music FIXME
             case 'stop':
                 // bot.leaveVoiceChannel(voiceChannelID, {});
@@ -408,7 +382,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 message: 'I am no monster ' + user + '. But I belive you are.'
             });
         }
-    } else if (message.indexOf('play') >= 0 || message.indexOf('up for') >= 0 || message.indexOf('on tonight') >= 0 || message.indexOf('down for') >= 0) {
+    } else if (message.indexOf('up for') >= 0 || message.indexOf('on tonight') >= 0 || message.indexOf('down for') >= 0) {
         rnd = Math.ceil(Math.random() * 2)
         if (rnd == 1) {
             bot.sendMessage({
@@ -437,7 +411,108 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         }
         bot.sendMessage({
             to: channelID,
-            message: msg + ''
+            message: msg
         });
     }
 });
+
+function getSounds () {
+    var s = [];
+    var tempArray = [];
+    for (var i = 0; i < soundFiles.length; ++i) {
+        tempArray.push(fs.readdirSync('./Sounds/' + soundFiles[i] + '/'));
+    }
+
+    for (var i = 0; i < tempArray.length; ++i) {
+        var temp = tempArray[i]
+        for (var j = 0; j < temp.length; ++j) {
+            s.push(temp[j])
+        }
+    }
+
+    return s;
+}
+
+/**
+ * playMusic allows the bot to play music either at random, by song name, or randomly by file name.
+ */
+
+function playMusic (type, name, channelID) {
+    var s;
+    var sList = [];
+    // plays by album name
+    if (type == 'album') {
+        for (var i = 0; i < soundFiles.length; ++i) {
+            if (soundFiles[i].toLowerCase().includes(name.toLowerCase()) == true) {
+                sList = fs.readdirSync('./Sounds/' + soundFiles[i] + '/')
+                rnd = Math.floor(Math.random() * sList.length)
+                s = soundFiles[i] + '/' + sList[rnd];
+            }
+        }
+        if (s == null) {
+            console.log('No file with the name \'' + name + '\' was found.')
+            bot.sendMessage({
+                to: channelID,
+                message: 'No file with the name \'' + name + '\' was found.'
+            });
+            return;
+        }
+    } // plays by song name
+    else if (type == 'song') {
+        for (var i = 0; i < soundFiles.length; ++i) {
+            var tempList = fs.readdirSync('./Sounds/' + soundFiles[i] + '/')
+            for (var j = 0; j < tempList.length; ++j) {
+                if (tempList[j].toLowerCase().includes(name.toLowerCase()) == true) {
+                    if (s != null) {
+                        sList.push(s);
+                    }
+                    s = soundFiles[i] + '/' + tempList[j]
+                }
+            }
+        }
+        if (sList.length > 1) {
+            sList.push(s);
+            bot.sendMessage({
+                to: channelID,
+                message: sList.length + ' songs were found with the name \'' + name + '\'. Here they are:' + sList
+            })
+
+            return;
+        } else if (s == null) {
+            bot.sendMessage({
+                to: channelID,
+                message: 'No songs with the name \'' + name + '\' were found.'
+            })
+            return;
+        }
+
+    }
+
+    bot.joinVoiceChannel(voiceChannelID, function(error, events) {
+        //Check to see if any errors happen while joining.
+        if (error) return console.error(error);
+      
+        //Then get the audio context
+        bot.getAudioContext(voiceChannelID, function(error, stream) {
+          //Once again, check to see if any errors exist
+          if (error) return console.error(error);
+      
+          //Create a stream to your file and pipe it to the stream
+          //Without {end: false}, it would close up the stream, so make sure to include that.
+          fs.createReadStream('./sounds/' + s).pipe(stream, {end: false});
+          bot.sendMessage({
+              to: channelID,
+              message: 'Now jamming out to ' + s
+          });
+      
+          //The stream fires `done` when it's got nothing else to send to Discord.
+          stream.on('done', function() {
+            bot.leaveVoiceChannel(voiceChannelID, {});
+            bot.sendMessage({
+                to: channelID,
+                message: 'The song has ended.'
+            });
+          });
+        });
+      });
+}
