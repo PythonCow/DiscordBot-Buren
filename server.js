@@ -60,7 +60,7 @@ var weapon = ['a sword',
     'my good looks',
 ];
 
-var soundFiles = fs.readdirSync('./Sounds');
+var soundFiles = fs.readdirSync('./sounds');
 var sounds = getSounds();
 
 var target = ' ';
@@ -420,7 +420,7 @@ function getSounds () {
     var s = [];
     var tempArray = [];
     for (var i = 0; i < soundFiles.length; ++i) {
-        tempArray.push(fs.readdirSync('./Sounds/' + soundFiles[i] + '/'));
+        tempArray.push(fs.readdirSync('./sounds/' + soundFiles[i] + '/'));
     }
 
     for (var i = 0; i < tempArray.length; ++i) {
@@ -444,7 +444,7 @@ function playMusic (type, name, channelID) {
     if (type == 'album') {
         for (var i = 0; i < soundFiles.length; ++i) {
             if (soundFiles[i].toLowerCase().includes(name.toLowerCase()) == true) {
-                sList = fs.readdirSync('./Sounds/' + soundFiles[i] + '/')
+                sList = fs.readdirSync('./sounds/' + soundFiles[i] + '/')
                 rnd = Math.floor(Math.random() * sList.length)
                 s = soundFiles[i] + '/' + sList[rnd];
             }
@@ -460,7 +460,7 @@ function playMusic (type, name, channelID) {
     } // plays by song name
     else if (type == 'song') {
         for (var i = 0; i < soundFiles.length; ++i) {
-            var tempList = fs.readdirSync('./Sounds/' + soundFiles[i] + '/')
+            var tempList = fs.readdirSync('./sounds/' + soundFiles[i] + '/')
             for (var j = 0; j < tempList.length; ++j) {
                 if (tempList[j].toLowerCase().includes(name.toLowerCase()) == true) {
                     if (s != null) {
